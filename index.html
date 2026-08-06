@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Team Shift Schedule Dashboard</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #cbd5e1;
+            --am-bg: #dbeafe;
+            --am-text: #1e40af;
+            --pm-bg: #fef3c7;
+            --pm-text: #92400e;
+            --rest-bg: #f1f5f9;
+            --rest-text: #475569;
+            --off-bg: #fee2e2;
+            --off-text: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 6px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--surface);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .controls-row2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        button, select {
+            padding: 8px 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface);
+            color: var(--text);
+            text-align: center;
+            width: 100%;
+        }
+
+        button {
+            font-weight: 600;
+            background: #e2e8f0;
+            cursor: pointer;
+        }
+
+        button:active {
+            background: #cbd5e1;
+        }
+
+        .calendar-card {
+            background: var(--surface);
+            padding: 6px;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+
+        .weekday-header {
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.65rem;
+            color: var(--text-light);
+            padding: 4px 0;
+        }
+
+        .day-cell {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            min-height: 72px;
+            padding: 2px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .day-cell.empty {
+            background: #f8fafc;
+            border-color: #e2e8f0;
+            opacity: 0.4;
+        }
+
+        .day-number {
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 2px;
+            padding-left: 2px;
+        }
+
+        .today {
+            border-color: var(--primary);
+            border-width: 2px;
+        }
+
+        .shift-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .shift-item {
+            font-size: 0.55rem;
+            padding: 1px 2px;
+            border-radius: 2px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            line-height: 1.1;
+        }
+
+        .shift-AM { background: var(--am-bg); color: var(--am-text); }
+        .shift-PM { background: var(--pm-bg); color: var(--pm-text); }
+        .shift-Rest { background: var(--rest-bg); color: var(--rest-text); }
+        .shift-Off { background: var(--off-bg); color: var(--off-text); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 id="month-year-title">Team Shift Schedule</h1>
+        <div class="controls">
+            <button id="prev-btn">◀ Prev</button>
+            <select id="month-select"></select>
+            <button id="next-btn">Next ▶</button>
+        </div>
+        <div class="controls-row2">
+            <select id="year-select"></select>
+            <button id="today-btn">Current Month</button>
+        </div>
+    </header>
+
+    <div class="calendar-card">
+        <div class="calendar-grid" id="calendar">
+            <div class="weekday-header">Sun</div>
+            <div class="weekday-header">Mon</div>
+            <div class="weekday-header">Tue</div>
+            <div class="weekday-header">Wed</div>
+            <div class="weekday-header">Thu</div>
+            <div class="weekday-header">Fri</div>
+            <div class="weekday-header">Sat</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const baseDate = new Date(2026, 7, 6); // August 6, 2026
+    
+    const cycleSequence = [
+        { 'B': 'AM', 'C': 'PM', 'A': 'Rest', 'D': 'Off' },
+        { 'D': 'AM', 'B': 'PM', 'C': 'Rest', 'A': 'Off' },
+        { 'A': 'AM', 'D': 'PM', 'B': 'Rest', 'C': 'Off' },
+        { 'C': 'AM', 'A': 'PM', 'D': 'Rest', 'B': 'Off' }
+    ];
+
+    function getShiftsForDate(date) {
+        const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const base = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
+        const diffTime = target - base;
+        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        
+        let cycleIndex = diffDays % 4;
+        if (cycleIndex < 0) {
+            cycleIndex += 4;
+        }
+        return cycleSequence[cycleIndex];
+    }
+
+    const now = new Date();
+    let currentYear = now.getFullYear();
+    let currentMonth = now.getMonth();
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    const monthSelect = document.getElementById('month-select');
+    const yearSelect = document.getElementById('year-select');
+    const calendarEl = document.getElementById('calendar');
+    const titleEl = document.getElementById('month-year-title');
+
+    monthNames.forEach((m, index) => {
+        const opt = document.createElement('option');
+        opt.value = index;
+        opt.textContent = m;
+        monthSelect.appendChild(opt);
+    });
+
+    for (let y = 2026; y <= 2030; y++) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        yearSelect.appendChild(opt);
+    }
+
+    function renderCalendar(year, month) {
+        monthSelect.value = month;
+        yearSelect.value = year;
+        titleEl.textContent = `${monthNames[month]} ${year}`;
+
+        const headersHTML = `
+            <div class="weekday-header">Sun</div>
+            <div class="weekday-header">Mon</div>
+            <div class="weekday-header">Tue</div>
+            <div class="weekday-header">Wed</div>
+            <div class="weekday-header">Thu</div>
+            <div class="weekday-header">Fri</div>
+            <div class="weekday-header">Sat</div>
+        `;
+        calendarEl.innerHTML = headersHTML;
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < firstDayIndex; i++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'day-cell empty';
+            calendarEl.appendChild(emptyCell);
+        }
+
+        for (let day = 1; day <= totalDays; day++) {
+            const cellDate = new Date(year, month, day);
+            const cell = document.createElement('div');
+            cell.className = 'day-cell';
+
+            if (day === now.getDate() && month === now.getMonth() && year === now.getFullYear()) {
+                cell.classList.add('today');
+            }
+
+            const dayNum = document.createElement('div');
+            dayNum.className = 'day-number';
+            dayNum.textContent = day;
+            cell.appendChild(dayNum);
+
+            const shifts = getShiftsForDate(cellDate);
+            const shiftList = document.createElement('div');
+            shiftList.className = 'shift-list';
+
+            for (const [team, shift] of Object.entries(shifts)) {
+                const shiftItem = document.createElement('div');
+                shiftItem.className = `shift-item shift-${shift}`;
+                shiftItem.innerHTML = `<span>T${team}</span><span>${shift}</span>`;
+                shiftList.appendChild(shiftItem);
+            }
+
+            cell.appendChild(shiftList);
+            calendarEl.appendChild(cell);
+        }
+    }
+
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        currentMonth--;
+        if (currentMonth < 0) {
+            currentMonth = 11;
+            currentYear--;
+        }
+        renderCalendar(currentYear, currentMonth);
+    });
+
+    document.getElementById('next-btn').addEventListener('click', () => {
+        currentMonth++;
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear++;
+        }
+        renderCalendar(currentYear, currentMonth);
+    });
+
+    document.getElementById('today-btn').addEventListener('click', () => {
+        const currentDate = new Date();
+        currentYear = currentDate.getFullYear();
+        currentMonth = currentDate.getMonth();
+        renderCalendar(currentYear, currentMonth);
+    });
+
+    monthSelect.addEventListener('change', (e) => {
+        currentMonth = parseInt(e.target.value);
+        renderCalendar(currentYear, currentMonth);
+    });
+
+    yearSelect.addEventListener('change', (e) => {
+        currentYear = parseInt(e.target.value);
+        renderCalendar(currentYear, currentMonth);
+    });
+
+    renderCalendar(currentYear, currentMonth);
+</script>
+
+</body>
+</html>
