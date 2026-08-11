@@ -161,12 +161,41 @@
             justify-content: space-between;
             font-weight: 700;
             line-height: 1.1;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .shift-item:hover {
+            opacity: 0.75;
         }
 
         .shift-AM { background: var(--am-bg); color: var(--am-text); }
         .shift-PM { background: var(--pm-bg); color: var(--pm-text); }
         .shift-Rest { background: var(--rest-bg); color: var(--rest-text); }
         .shift-Off { background: var(--off-bg); color: var(--off-text); }
+
+        /* Modal Styles */
+        #team-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 320px;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -198,8 +227,65 @@
     </div>
 </div>
 
+<!-- Team Info Modal -->
+<div id="team-modal">
+    <div class="modal-card">
+        <h3 id="modal-title" style="margin-top: 0; color: #2563eb; font-size: 1.1rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px;">Team Info</h3>
+        <div id="modal-content" style="font-size: 0.85rem; line-height: 1.5; margin: 10px 0; max-height: 250px; overflow-y: auto;">
+            <!-- Dynamic team member rows load here -->
+        </div>
+        <button id="close-modal" style="width: 100%; padding: 8px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 10px;">Close</button>
+    </div>
+</div>
+
 <script>
-    // Base reference date set to August 10, 2026 (Day 1 of the sequence)
+    // Global storage for team.json data
+    let teamData = {};
+
+    // Fetch team.json data on load
+    fetch('team.json')
+        .then(response => response.json())
+        .then(data => {
+            teamData = data;
+        })
+        .catch(error => console.error('Error loading team.json:', error));
+
+    // Modal elements and controls
+    const modal = document.getElementById('team-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalContent = document.getElementById('modal-content');
+    const closeModalBtn = document.getElementById('close-modal');
+
+    closeModalBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    function openTeamModal(teamLetter) {
+        modalTitle.textContent = `Team ${teamLetter} Members`;
+        modalContent.innerHTML = '';
+
+        const members = teamData[teamLetter];
+        if (members) {
+            for (const [role, info] of Object.entries(members)) {
+                const row = document.createElement('div');
+                row.style.cssText = "margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9;";
+                row.innerHTML = `<strong>${role}:</strong> ${info.name}<br><span style="color: #64748b; font-size: 0.75rem;">📞 ${info.contact}</span>`;
+                modalContent.appendChild(row);
+            }
+        } else {
+            modalContent.innerHTML = `<p style="color: #64748b;">No details available for Team ${teamLetter}.</p>`;
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    // Base reference date set to August 10, 2026 (Day 1 of sequence)
     const baseDate = new Date(2026, 7, 10);
     
     const cycleSequence = [
@@ -290,11 +376,16 @@
                 const shiftItem = document.createElement('div');
                 shiftItem.className = `shift-item shift-${shift}`;
                 shiftItem.innerHTML = `<span>${team}</span><span>${shift}</span>`;
+                
+                shiftItem.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openTeamModal(team);
+                });
+
                 shiftList.appendChild(shiftItem);
             }
             cell.appendChild(shiftList);
 
-            // Click to jump to previous month
             cell.addEventListener('click', () => {
                 currentMonth = prevMonthIndex;
                 currentYear = prevMonthYear;
@@ -327,6 +418,12 @@
                 const shiftItem = document.createElement('div');
                 shiftItem.className = `shift-item shift-${shift}`;
                 shiftItem.innerHTML = `<span>${team}</span><span>${shift}</span>`;
+
+                shiftItem.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openTeamModal(team);
+                });
+
                 shiftList.appendChild(shiftItem);
             }
 
@@ -334,7 +431,7 @@
             calendarEl.appendChild(cell);
         }
 
-        // Leading days from next month to complete calendar grid (35 or 42 total cells)
+        // Leading days from next month to complete calendar grid
         const totalCellsRendered = firstDayIndex + totalDays;
         const totalCellsNeeded = totalCellsRendered <= 35 ? 35 : 42;
         const nextMonthDaysCount = totalCellsNeeded - totalCellsRendered;
@@ -359,11 +456,16 @@
                 const shiftItem = document.createElement('div');
                 shiftItem.className = `shift-item shift-${shift}`;
                 shiftItem.innerHTML = `<span>${team}</span><span>${shift}</span>`;
+
+                shiftItem.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openTeamModal(team);
+                });
+
                 shiftList.appendChild(shiftItem);
             }
             cell.appendChild(shiftList);
 
-            // Click to jump to next month
             cell.addEventListener('click', () => {
                 currentMonth = nextMonthIndex;
                 currentYear = nextMonthYear;
