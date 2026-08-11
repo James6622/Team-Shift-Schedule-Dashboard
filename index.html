@@ -149,12 +149,12 @@
         }
 
         .shift-item {
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             padding: 1px 2px;
             border-radius: 2px;
             display: flex;
             justify-content: space-between;
-            font-weight: 600;
+            font-weight: 700;
             line-height: 1.1;
         }
 
@@ -194,13 +194,14 @@
 </div>
 
 <script>
-    const baseDate = new Date(2026, 7, 6); // August 6, 2026
+    // Base reference date set to August 10, 2026 (Day 1 of the sequence)
+    const baseDate = new Date(2026, 7, 10);
     
     const cycleSequence = [
-        { 'B': 'AM', 'C': 'PM', 'A': 'Rest', 'D': 'Off' },
-        { 'D': 'AM', 'B': 'PM', 'C': 'Rest', 'A': 'Off' },
-        { 'A': 'AM', 'D': 'PM', 'B': 'Rest', 'C': 'Off' },
-        { 'C': 'AM', 'A': 'PM', 'D': 'Rest', 'B': 'Off' }
+        { 'B': 'AM', 'D': 'PM', 'A': 'Rest', 'C': 'Off' }, // Day 1: 10 Aug
+        { 'C': 'AM', 'B': 'PM', 'D': 'Rest', 'A': 'Off' }, // Day 2: 11 Aug
+        { 'A': 'AM', 'C': 'PM', 'B': 'Rest', 'D': 'Off' }, // Day 3: 12 Aug
+        { 'D': 'AM', 'A': 'PM', 'C': 'Rest', 'B': 'Off' }  // Day 4: 13 Aug
     ];
 
     function getShiftsForDate(date) {
@@ -287,7 +288,7 @@
             for (const [team, shift] of Object.entries(shifts)) {
                 const shiftItem = document.createElement('div');
                 shiftItem.className = `shift-item shift-${shift}`;
-                shiftItem.innerHTML = `<span>T${team}</span><span>${shift}</span>`;
+                shiftItem.innerHTML = `<span>${team}</span><span>${shift}</span>`;
                 shiftList.appendChild(shiftItem);
             }
 
