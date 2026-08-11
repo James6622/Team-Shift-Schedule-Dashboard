@@ -123,10 +123,15 @@
             justify-content: flex-start;
         }
 
-        .day-cell.empty {
+        .day-cell.overflow {
             background: #f8fafc;
-            border-color: #e2e8f0;
-            opacity: 0.4;
+            opacity: 0.55;
+            cursor: pointer;
+        }
+
+        .day-cell.overflow:hover {
+            opacity: 0.85;
+            background: #f1f5f9;
         }
 
         .day-number {
@@ -261,12 +266,45 @@
         const firstDayIndex = new Date(year, month, 1).getDay();
         const totalDays = new Date(year, month + 1, 0).getDate();
 
-        for (let i = 0; i < firstDayIndex; i++) {
-            const emptyCell = document.createElement('div');
-            emptyCell.className = 'day-cell empty';
-            calendarEl.appendChild(emptyCell);
+        // Previous month calculation for trailing overflow cells
+        const prevMonthYear = month === 0 ? year - 1 : year;
+        const prevMonthIndex = month === 0 ? 11 : month - 1;
+        const totalDaysPrevMonth = new Date(year, month, 0).getDate();
+
+        // Render trailing days from previous month
+        for (let i = firstDayIndex - 1; i >= 0; i--) {
+            const dayNum = totalDaysPrevMonth - i;
+            const cellDate = new Date(prevMonthYear, prevMonthIndex, dayNum);
+            const cell = document.createElement('div');
+            cell.className = 'day-cell overflow';
+
+            const dayNumEl = document.createElement('div');
+            dayNumEl.className = 'day-number';
+            dayNumEl.textContent = dayNum;
+            cell.appendChild(dayNumEl);
+
+            const shifts = getShiftsForDate(cellDate);
+            const shiftList = document.createElement('div');
+            shiftList.className = 'shift-list';
+            for (const [team, shift] of Object.entries(shifts)) {
+                const shiftItem = document.createElement('div');
+                shiftItem.className = `shift-item shift-${shift}`;
+                shiftItem.innerHTML = `<span>${team}</span><span>${shift}</span>`;
+                shiftList.appendChild(shiftItem);
+            }
+            cell.appendChild(shiftList);
+
+            // Click to jump to previous month
+            cell.addEventListener('click', () => {
+                currentMonth = prevMonthIndex;
+                currentYear = prevMonthYear;
+                renderCalendar(currentYear, currentMonth);
+            });
+
+            calendarEl.appendChild(cell);
         }
 
+        // Render current month days
         for (let day = 1; day <= totalDays; day++) {
             const cellDate = new Date(year, month, day);
             const cell = document.createElement('div');
@@ -293,6 +331,45 @@
             }
 
             cell.appendChild(shiftList);
+            calendarEl.appendChild(cell);
+        }
+
+        // Leading days from next month to complete calendar grid (35 or 42 total cells)
+        const totalCellsRendered = firstDayIndex + totalDays;
+        const totalCellsNeeded = totalCellsRendered <= 35 ? 35 : 42;
+        const nextMonthDaysCount = totalCellsNeeded - totalCellsRendered;
+
+        const nextMonthYear = month === 11 ? year + 1 : year;
+        const nextMonthIndex = month === 11 ? 0 : month + 1;
+
+        for (let day = 1; day <= nextMonthDaysCount; day++) {
+            const cellDate = new Date(nextMonthYear, nextMonthIndex, day);
+            const cell = document.createElement('div');
+            cell.className = 'day-cell overflow';
+
+            const dayNumEl = document.createElement('div');
+            dayNumEl.className = 'day-number';
+            dayNumEl.textContent = day;
+            cell.appendChild(dayNumEl);
+
+            const shifts = getShiftsForDate(cellDate);
+            const shiftList = document.createElement('div');
+            shiftList.className = 'shift-list';
+            for (const [team, shift] of Object.entries(shifts)) {
+                const shiftItem = document.createElement('div');
+                shiftItem.className = `shift-item shift-${shift}`;
+                shiftItem.innerHTML = `<span>${team}</span><span>${shift}</span>`;
+                shiftList.appendChild(shiftItem);
+            }
+            cell.appendChild(shiftList);
+
+            // Click to jump to next month
+            cell.addEventListener('click', () => {
+                currentMonth = nextMonthIndex;
+                currentYear = nextMonthYear;
+                renderCalendar(currentYear, currentMonth);
+            });
+
             calendarEl.appendChild(cell);
         }
     }
