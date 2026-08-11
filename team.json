@@ -9,9 +9,7 @@
 	"Member": { "name": "Mirsyad", "contact": "97273527" },
 	"Member": { "name": "Sulaiman", "contact": "88173602" }
     }
-},
 
-{
     "B": {
         "TL": { "name": "Leng", "contact": "97681307" },
         "DTL": { "name": "Serene Lim", "contact": "84287278" },
@@ -20,6 +18,6 @@
 	"Member": { "name": "Teh Ding Kiong", "contact": "92252291" },
 	"Member": { "name": "Ken Ong", "contact": "87895967" },
 	"Member": { "name": "Mirsyad", "contact": "97273527" },
-	"Member": { "name": "Sulaiman", "contact": "88173602" } 
-	}
-},
+	"Member": { "name": "Sulaiman", "contact": "88173602" }
+    }
+}
