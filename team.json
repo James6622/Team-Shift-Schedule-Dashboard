@@ -1,4 +1,5 @@
-{
+// Instead of fetching from team.json, declare teamData directly:
+let teamData = {
     "A": [
         { "role": "TL", "name": "Patrick Koh", "contact": "93227589" },
         { "role": "DTL", "name": "Serene Lim", "contact": "84287278" },
@@ -39,4 +40,4 @@
         { "role": "Member", "name": "Farhan", "contact": "96838024" },
         { "role": "Member", "name": "Joel Chow", "contact": "98213761" }
     ]
-}
+};
