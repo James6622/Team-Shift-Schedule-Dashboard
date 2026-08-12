@@ -239,11 +239,11 @@
 </div>
 
 <script>
-    // Global storage for team.json array data
+    // Global storage for team data fetched from team.json
     let teamData = {};
 
-    // Fetch team.json data on load
-    fetch('team.json')
+    // Fetch team.json data on load using relative path for GitHub Pages compatibility
+    fetch('./team.json')
         .then(response => response.json())
         .then(data => {
             teamData = data;
