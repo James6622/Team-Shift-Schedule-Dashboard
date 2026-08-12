@@ -239,7 +239,7 @@
 </div>
 
 <script>
-    // Global storage for team.json data
+    // Global storage for team.json array data
     let teamData = {};
 
     // Fetch team.json data on load
@@ -271,13 +271,13 @@
         modalContent.innerHTML = '';
 
         const members = teamData[teamLetter];
-        if (members) {
-            for (const [role, info] of Object.entries(members)) {
+        if (Array.isArray(members) && members.length > 0) {
+            members.forEach(info => {
                 const row = document.createElement('div');
                 row.style.cssText = "margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #f1f5f9;";
-                row.innerHTML = `<strong>${role}:</strong> ${info.name}<br><span style="color: #64748b; font-size: 0.75rem;">📞 ${info.contact}</span>`;
+                row.innerHTML = `<strong>${info.role}:</strong> ${info.name}<br><span style="color: #64748b; font-size: 0.75rem;">📞 ${info.contact}</span>`;
                 modalContent.appendChild(row);
-            }
+            });
         } else {
             modalContent.innerHTML = `<p style="color: #64748b;">No details available for Team ${teamLetter}.</p>`;
         }
