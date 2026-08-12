@@ -11,32 +11,32 @@
     ],
     "B": [
         "TL": { "name": "Leng", "contact": "97681307" },
-        "DTL": { "name": "Serene Lim", "contact": "84287278" },
-        "ATL": { "name": "Raihan", "contact": "81131956" },
-        "Member": { "name": "Siti", "contact": "81250865" },
-	"Member": { "name": "Teh Ding Kiong", "contact": "92252291" },
-	"Member": { "name": "Ken Ong", "contact": "87895967" },
-	"Member": { "name": "Mirsyad", "contact": "97273527" },
-	"Member": { "name": "Sulaiman", "contact": "88173602" }
+        "DTL": { "name": "Pan Ye Hao", "contact": "83827353" },
+        "ATL": { "name": "Alvin Hoe", "contact": "82285343" },
+        "Member": { "name": "Garry Lim", "contact": "90226379" },
+	"Member": { "name": "Fadhil", "contact": "98313143" },
+	"Member": { "name": "Nur Nadia", "contact": "81399967" },
+	"Member": { "name": "Syafiq", "contact": "98957372" },
+	"Member": { "name": "Teh Chin Choon", "contact": "91398284" }
     ],
     "C": [
         "TL": { "name": "Nooridga", "contact": "92230563" },
-        "DTL": { "name": "Serene Lim", "contact": "84287278" },
-        "ATL": { "name": "Raihan", "contact": "81131956" },
-        "Member": { "name": "Siti", "contact": "81250865" },
-	"Member": { "name": "Teh Ding Kiong", "contact": "92252291" },
-	"Member": { "name": "Ken Ong", "contact": "87895967" },
-	"Member": { "name": "Mirsyad", "contact": "97273527" },
-	"Member": { "name": "Sulaiman", "contact": "88173602" }
+        "DTL": { "name": "Colin Chew", "contact": "91090765" },
+        "ATL": { "name": "Ruzaini", "contact": "98273513" },
+        "Member": { "name": "Francis See", "contact": "97922646" },
+	"Member": { "name": "Wayne Lee", "contact": "97254929" },
+	"Member": { "name": "Ridzuan", "contact": "90705245" },
+	"Member": { "name": "Syafig", "contact": "891146353" },
+	"Member": { "name": "Nashra", "contact": "84184137" }
     ],
     "D": [
         "TL": { "name": "Tan Joo Hong", "contact": "98424919" },
-        "DTL": { "name": "Serene Lim", "contact": "84287278" },
-        "ATL": { "name": "Raihan", "contact": "81131956" },
-        "Member": { "name": "Siti", "contact": "81250865" },
-	"Member": { "name": "Teh Ding Kiong", "contact": "92252291" },
-	"Member": { "name": "Ken Ong", "contact": "87895967" },
-	"Member": { "name": "Mirsyad", "contact": "97273527" },
-	"Member": { "name": "Sulaiman", "contact": "88173602" }
+        "DTL": { "name": "Kelvin Ang", "contact": "96911716" },
+        "ATL": { "name": "Nurashidah", "contact": "97856447" },
+        "Member": { "name": "Lemuel Yeo", "contact": "92391832" },
+	"Member": { "name": "Nazree", "contact": "92311295" },
+	"Member": { "name": "Elyn Sim ", "contact": "96415581" },
+	"Member": { "name": "Farhan", "contact": "96838024" },
+	"Member": { "name": "Joel Chow", "contact": "98213761" }
     ]
 }
