@@ -20,7 +20,7 @@
         { "role": "Member", "name": "Teh Chin Choon", "contact": "91398284" }
     ],
     "C": [
-        { "role": "TL", "name": "Nooridga", "contact": "92230563" },
+        { "role": "TL", "name": "Nooridja", "contact": "92230563" },
         { "role": "DTL", "name": "Colin Chew", "contact": "91090765" },
         { "role": "ATL", "name": "Ruzaini", "contact": "98273513" },
         { "role": "Member", "name": "Francis See", "contact": "97922646" },
@@ -32,8 +32,9 @@
     "D": [
         { "role": "TL", "name": "Tan Joo Hong", "contact": "98424919" },
         { "role": "DTL", "name": "Kelvin Ang", "contact": "96911716" },
-        { "role": "ATL", "name": "Nurashidah", "contact": "97856447" },
+        { "role": "ATL", "name": "shidah", "contact": "97856447" },
         { "role": "Member", "name": "Lemuel Yeo", "contact": "92391832" },
+        { "role": "Member", "name": "Daniel", "contact": "90022429" 
         { "role": "Member", "name": "Nazree", "contact": "92311295" },
         { "role": "Member", "name": "Elyn Sim", "contact": "96415581" },
         { "role": "Member", "name": "Farhan", "contact": "96838024" },
